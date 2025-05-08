@@ -1,0 +1,109 @@
+---
+title: "Exercise 6"
+author: "Marc Dotson"
+format: docx
+---
+
+Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio on Posit Cloud, create a new Quarto document and do the following.
+
+1. Let's define customers who have "high monetary value" as anyone who has spent more than $25,000 total. In its own section of the report, use the `store_revenue` data to identify these customers. How many "high monetary value" customers are there?
+2. In its own section of the report, report on the composition of these customers by visualizing the relationship between their total revenue, credit, gender, and marital status all in a single visualization. Report on what you discover.
+3. Render the Quarto document into Word, export the Word document, and upload to Canvas.
+
+**Five points total, one point each for:**
+
+- **Correctly identifying 1,501 "high monetary value" customers.**
+- **Question 1 and Question 2 having their own sections.**
+- **Producing a visualization that incorporates all four variables.**
+- **Interpreting the visualization.**
+- **Submitting a rendered Word document.**
+
+## Question 1
+
+Let's first import `store_revenue`. Let's start with how we retrieve it from the database.
+
+```{r}
+# Load packages.
+library(tidyverse)
+library(dbplyr)
+library(DBI)
+```
+
+```{r eval=FALSE}
+# Connect to the database.
+con <- dbConnect(
+  RPostgreSQL::PostgreSQL(),
+  dbname = "analyticsdb",
+  host = "analyticsdb.ccutuqssh92k.us-west-2.rds.amazonaws.com",
+  port = 55432,
+  user = "quantmktg",
+  password = rstudioapi::askForPassword("Database password")
+)
+
+# Import the data.
+store_revenue <- tbl(con, "store_revenue") |>
+  collect()
+
+# Disconnect from the database.
+dbDisconnect(con)
+
+# Write the data locally.
+write_csv(store_revenue, here::here("Data", "store_revenue.csv"))
+```
+
+Or, if you've already written it locally.
+
+```{r}
+# Import the data.
+store_revenue <- read_csv(here::here("Data", "store_revenue.csv"))
+```
+
+Now we can identify "high monetary value" customers as anyone who has spent more than $25,000 total.
+
+```{r}
+# Tidy and summarize revenue history and filter on respondents
+# who have spent more than $25,000 total.
+money_cust <- store_revenue |> 
+  pivot_longer(
+    -customer_id,
+    names_to = "month_year",
+    values_to = "revenue"
+  ) |> 
+  group_by(customer_id) |> 
+  summarize(total_revenue = sum(revenue)) |> 
+  filter(total_revenue > 25000)
+  
+money_cust
+```
+
+As we can see, there are 1,501 customers in our CRM database who qualify as "high monetary value."
+
+## Question 2
+
+Now we can report on the composition of these customers by visualizing the relationship between their total revenue, credit, gender, and marital status all in a single visualization.
+
+```{r}
+# Import customer data.
+customer_data <- read_csv(here::here("Data", "customer_data.csv"))
+```
+
+```{r}
+# Join money_cust and customer_data and visualize the relationship
+# between total revenue, credit, gender, and marital status.
+money_cust |> 
+  left_join(customer_data, join_by(customer_id)) |> 
+  ggplot(aes(x = total_revenue, y = credit)) +
+  geom_point(size = 2, alpha = 0.5 , aes(color = married)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_grid(married ~ gender) +
+  labs(
+    title = "Relationship Between Total Revenue and Credit",
+    subtitle = "Faceted by Gender and Marital Status",
+    x = "Total Revenue",
+    y = "Credit"
+  ) +
+  scale_color_discrete(name = "Married")
+```
+
+It appears that the relationship between total revenue (i.e., how much a customer has spent) and their credit is strongest for unmarried women, married men, and married individuals who have selected "other" as their gender.
+
