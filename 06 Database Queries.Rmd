@@ -4,7 +4,7 @@ subtitle: "MKTG 411 Marketing Analytics"
 output: 
   ioslides_presentation:
     widescreen: true
-    css: ../style.css
+    css: style.css
 ---
 
 ## Grading Exercises
@@ -14,19 +14,19 @@ Remember that you grade your own submitted exercises using the rubric specified 
 ## Marketing Analytics Process
 
 <center>
-![](../../Figures/process_import.png){width=900px}
+![](Figures/process_import.png){width=900px}
 </center>
 
 ---
 
-![](../../Figures/hex_dbplyr.png){width=500px}
+![](Figures/hex_dbplyr.png){width=500px}
 
 ## Computer Orientation
 
 RStudio on Posit Cloud is nice, but it's not free. R and RStudio are free to download and install *locally* (i.e., on your own computer) and eventually we'll do that. R's performance is primarily based on your *available* **RAM** and secondarily on your **CPU**. In RStudio, the Environment uses RAM while Files gives you access to the **hard drive**.
 
 <center>
-![](../../Figures/computer_specs.png){width="850px"}
+![](Figures/computer_specs.png){width="850px"}
 </center>
 
 ---
@@ -80,7 +80,7 @@ customer_data <- read_csv(here::here("Data", "customer_data.csv"))
 ---
 
 <center>
-![](../../Figures/monsters_here.png){width="700px"}
+![](Figures/monsters_here.png){width="700px"}
 </center>
 
 ## Databases and SQL
@@ -88,7 +88,7 @@ customer_data <- read_csv(here::here("Data", "customer_data.csv"))
 As the size and complexity of data grow, it is more likely to be housed on a **database**, a computer or **server** formatted specifically to house data (relational and otherwise). We communicate with a database using **queries** composed in **SQL** (Structured Query Language).
 
 <center>
-![](../../Figures/import_sql.png){width=850px}
+![](Figures/import_sql.png){width=850px}
 </center>
 
 ## Simple Queries
