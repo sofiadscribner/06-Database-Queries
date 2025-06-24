@@ -1,0 +1,19 @@
+---
+title: "06 Database Queries Starter Code"
+format: docx
+editor: visual
+---
+
+## Lecture 06 Notes
+
+### Install and Load Packages
+
+```{r}
+
+# Be sure to install the RPostgreSQL before proceeding. This code loads the packages.
+
+library(tidyverse) # tidyverse packages, including dplyr.
+library(dbplyr)    # dbplyr translates dplyr into SQL.
+library(DBI)       # DBI manages the database connection.
+
+```

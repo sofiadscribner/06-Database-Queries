@@ -9,7 +9,7 @@ output:
 
 ## Grading Exercises
 
-Remember that you grade your own submitted exercises using the rubric specified in each posted exercise solution, adding comments (directly for R scripts or **using the comment feature for Word documents**) where their solution differs from the posted solution.
+Remember that you grade your own submitted exercises using the rubric specified in each posted exercise solution, adding comments (using the comment feature for Word documents) where your solution differs from the posted solution.
 
 ## Marketing Analytics Process
 
@@ -21,9 +21,13 @@ Remember that you grade your own submitted exercises using the rubric specified 
 
 ![](Figures/hex_dbplyr.png){width=500px}
 
+## Motivating Example
+
+Now that you better understand how to visualize, summarize, and tidy data, your manager wants you to have more data to increase the breadth and depth of your analysis. However, this additional data is stored in a PostgreSQL database. How can you access it? Have any of you had experience with databases before?
+
 ## Computer Orientation
 
-RStudio on Posit Cloud is nice, but it's not free. R and RStudio are free to download and install *locally* (i.e., on your own computer) and eventually we'll do that. R's performance is primarily based on your *available* **RAM** and secondarily on your **CPU**. In RStudio, the Environment uses RAM while Files gives you access to the **hard drive**.
+R's performance is primarily based on your *available* **RAM** and secondarily on your **CPU**. In RStudio, the Environment uses RAM while Files gives you access to the **hard drive**.
 
 <center>
 ![](Figures/computer_specs.png){width="850px"}
@@ -45,7 +49,6 @@ RAM (i.e., random access memory) is used for:
 
 A hard drive is composed of **files** (e.g., .csv, .rds, .R, .qmd, .exe) organized into **folders**/**directories**. It is critical to organize your work. Create a folder for your:
 
-- ~~Slides~~ (later)
 - Notes
 - Data
 - Exercises
@@ -59,29 +62,21 @@ When we want to import or save data or reference another file on the hard drive,
 
 Whenever you have this project open in RStudio, the folder/directory where the project file is will be R's **working directory**, the folder where R looks when interacting with files.
 
-## Safe File Paths
+---
 
-Using a .Rproj file helps us keep track of the working directory as well as safely deal with file paths. File paths can be tricky because they are operating system and user-specific. We can use the {here} package and use `here()` in conjunction with an RStudio project to write file paths for us.
+To create an R project, click on the blue cube with an R in it at the top left of your screen in R. You should see this box pop up, and you can either choose to start a new folder, or use an existing folder. 
 
-```{r eval=FALSE}
-here::here()
-```
-
-```
-## [1] "/cloud/project"
-```
-
-Whenever we need a file path, we can use `here()` and build up from the working directory. For example, if `customer_data.csv` is in the `Data` folder in your working directory:
-
-```{r eval=FALSE}
-customer_data <- read_csv(here::here("Data", "customer_data.csv"))
-```
+<center>
+![](Figures/rproj.png){width="600px"}
+</center>
 
 ---
 
-<center>
-![](Figures/monsters_here.png){width="700px"}
-</center>
+When you initiate an R project, R creates a .Rproj file. When you open a .Rproj file, your working directory becomes the folder where the .Rproj file lives.
+
+## Your Turn!
+
+Take a second to organize your files for this class in the way I've just described. You may wish to create three folders within your main MKTG 411 folder, one for each unit, and then include sub-folders for notes, data, exercises, and projects within each. For future exercises and projects, starting with the one for exercise 6, include a .Rproj file in your folder to help you easily access the working directory you need.
 
 ## Databases and SQL
 
@@ -91,7 +86,7 @@ As the size and complexity of data grow, it is more likely to be housed on a **d
 ![](Figures/import_sql.png){width=850px}
 </center>
 
-## Simple Queries
+## SQL Backends
 
 There are a number of different types of databases or **backends**: MySQL, PostgreSQL, RSQLite, etc. Each backend requires its own dialect of SQL.
 
@@ -99,15 +94,11 @@ So we need to not only know SQL, we need to know a specific backend in order to 
 
 ## Simple Queries
 
-There are a number of different types of databases or **backends**: MySQL, PostgreSQL, RSQLite, etc. Each backend requires its own dialect of SQL.
-
-So we need to not only learn SQL, we need to learn a specific backend in order to just import data from a database. While it probably is a good idea to learn some SQL and specific backends, for *simple queries* we can write {dplyr} code that {dbplyr} will translate into a query in a specific backend for us.
+While it probably is a good idea to learn some SQL and specific backends, for *simple queries* we can write {dplyr} code that {dbplyr} will translate into a query in a specific backend for us. These two package names are similar, but they're not to be confused. We've already worked with {dplyr}, and now we are introducing {dbplyr}.
 
 ## Install and Load Packages
 
-Call `install.packages("RPostgreSQL")` in the console to install the R PostgreSQL backend.
-
-*Never* call `install.packages()` as part of an R script or Quarto document.
+Click Tools > Install Packages and type in 'RPostgreSQL' to install the R PostgreSQL backend.
 
 ```{r eval=FALSE}
 library(tidyverse) # tidyverse packages, including dplyr.
