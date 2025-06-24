@@ -108,10 +108,10 @@ library(DBI)       # DBI manages the database connection.
 
 ## Connect to a Database
 
-The password is `practicemakes`. It is bad form to save a password in your code.
+This code saves our process for connecting to the database within a variable we'll call "connection." Because it is bad practice to include the password within our document, we are telling R to give us a pop-up window where we can enter the password each time. The password is `practicemakes`.
 
 ```{r eval=FALSE}
-con <- dbConnect(
+connection <- dbConnect(
   RPostgreSQL::PostgreSQL(),
   dbname = "analyticsdb",
   host = "analyticsdb.ccutuqssh92k.us-west-2.rds.amazonaws.com",
@@ -120,7 +120,7 @@ con <- dbConnect(
   password = rstudioapi::askForPassword("Database password")
 )
 
-con
+connection
 ```
 
 ```
@@ -132,7 +132,7 @@ con
 List the **data tables** (the database's "data frames") on the database. Large data like those stored in a CRM system typically need to be stored in separate data tables.
 
 ```{r eval=FALSE}
-dbListTables(con)
+dbListTables(connection)
 ```
 
 ```
@@ -144,7 +144,7 @@ dbListTables(con)
 Print a data table. What's different?
 
 ```{r eval=FALSE}
-tbl(con, "store_revenue")
+tbl(connection, "store_revenue")
 ```
 
 ```
@@ -173,7 +173,8 @@ tbl(con, "store_revenue")
 It can be **computationally expensive** to query a database so {dbplyr} doesn't execute a query until you ask for data.
 
 ```{r eval=FALSE}
-data_db <- tbl(con, "customer_data") |> 
+
+data_db <- tbl(connection, "customer_data") |> 
   filter(region == "West") |> 
   group_by(state) |> 
   summarize(
@@ -229,14 +230,14 @@ GROUP BY "state"
 Once you have the wrangled the data you need, import it using `collect()`.
 
 ```{r eval=FALSE}
-store_revenue <- tbl(con, "store_revenue") |>
+store_revenue <- tbl(connection, "store_revenue") |>
   collect()
 ```
 
 Finally, **always disconnect** from a database when you are finished.
 
 ```{r eval=FALSE}
-dbDisconnect(con)
+dbDisconnect(connection)
 ```
 
 ```
@@ -251,13 +252,17 @@ We often only import some *subset* of a data table because it is too big to fit 
 # Write it as a CSV to use outside of R.
 store_revenue |> 
   select(-row.names) |> 
-  write_csv(here::here("Data", "store_revenue.csv"))
+  write_csv("Data", "store_revenue.csv")
 
 # OR write is as an RDS to use again in R.
 store_revenue |> 
   select(-row.names) |> 
-  write_rds(here::here("Data", "store_revenue.rds"))
+  write_rds("Data", "store_revenue.rds")
 ```
+
+## Live Coding Exercise
+
+For a project you're working on, you need to reconnect to the database and save the customer_data table locally. How would you do this?
 
 ## Wrapping Up
 
@@ -278,7 +283,7 @@ store_revenue |>
 
 ## Exercise 6
 
-Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio on Posit Cloud, create a new Quarto document and do the following.
+Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio, create a new Quarto document and do the following.
 
 1. Let's define customers who have "high monetary value" as anyone who has spent more than $25,000 total. In its own section of the report, use the `store_revenue` data to identify these customers. How many "high monetary value" customers are there?
 2. In its own section of the report, report on the composition of these customers by visualizing the relationship between their total revenue, credit, gender, and marital status all in a single visualization. Report on what you discover.

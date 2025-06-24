@@ -1,10 +1,9 @@
 ---
 title: "Exercise 6"
-author: "Marc Dotson"
 format: docx
 ---
 
-Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio on Posit Cloud, create a new Quarto document and do the following.
+Let's return to our recency, frequency, monetary (RFM) analysis. Now we can analyze customers based on how much they have spent. Once again, *remember to sketch out what you'd like the data to look like.* In RStudio, create a new Quarto document and do the following.
 
 1. Let's define customers who have "high monetary value" as anyone who has spent more than $25,000 total. In its own section of the report, use the `store_revenue` data to identify these customers. How many "high monetary value" customers are there?
 2. In its own section of the report, report on the composition of these customers by visualizing the relationship between their total revenue, credit, gender, and marital status all in a single visualization. Report on what you discover.

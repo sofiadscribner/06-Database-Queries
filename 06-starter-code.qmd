@@ -17,3 +17,105 @@ library(dbplyr)    # dbplyr translates dplyr into SQL.
 library(DBI)       # DBI manages the database connection.
 
 ```
+
+### Connect to a Database
+
+```{r}
+
+# This code saves our connecting process.
+
+connection <- dbConnect(
+  RPostgreSQL::PostgreSQL(),
+  dbname = "analyticsdb",
+  host = "analyticsdb.ccutuqssh92k.us-west-2.rds.amazonaws.com",
+  port = 5432,
+  user = "quantmktg",
+  password = rstudioapi::askForPassword("Database password")
+)
+
+connection
+```
+
+### Data Tables
+
+```{r}
+
+# This code lists all the tables in the database.
+
+dbListTables(connection)
+```
+
+```{r}
+
+# This code prints the store_revenue table from the database
+
+tbl(connection, "store_revenue")
+```
+
+### Query a Database
+
+```{r}
+
+# This code uses our connection instructions to connect to the database and query it to get the customer data, filter it to the West region, group it by state, and provide summary statistics.
+
+data_db <- tbl(connection, "customer_data") |> 
+  filter(region == "West") |> 
+  group_by(state) |> 
+  summarize(
+    n = n(),
+    avg_income = mean(income),
+    avg_credit = mean(credit)
+  )
+
+data_db
+```
+
+```{r}
+
+# This code reveals the SQL query that dbplyr is writing for us under the hood.
+
+data_db |>
+  show_query()
+```
+
+### Import Data and Disconnect
+
+```{r}
+
+# This code stores the data table in a variable called store_revenue.
+
+store_revenue <- tbl(connection, "store_revenue") |>
+  collect()
+```
+
+```{r}
+
+# This code disconnects you from the database.
+
+dbDisconnect(connection)
+```
+
+### Write Data
+
+```{r}
+
+# This code "writes" the data, which means it gets saved locally on your computer instead of just in this R session.
+
+# Write it as a CSV to use outside of R.
+store_revenue |> 
+  select(-row.names) |> 
+  write_csv("Data", "store_revenue.csv")
+
+# OR write is as an RDS to use again in R.
+store_revenue |> 
+  select(-row.names) |> 
+  write_rds("Data", "store_revenue.rds")
+```
+
+### Live Coding Exercise
+
+```{r}
+
+# Use this space to participate in the live coding exercise.
+
+```
