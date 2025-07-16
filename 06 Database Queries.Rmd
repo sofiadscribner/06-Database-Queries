@@ -23,7 +23,7 @@ Remember that you grade your own submitted exercises using the rubric specified 
 
 ## Motivating Example
 
-Now that you better understand how to visualize, summarize, and tidy data, your manager wants you to have more data to increase the breadth and depth of your analysis. However, this additional data is stored in a PostgreSQL database. How can you access it? Have any of you had experience with databases before?
+Now that you better understand how to visualize, summarize, and tidy data, your manager wants you to have more data to increase the breadth and depth of your analysis. However, this additional data is stored in a PostgreSQL database. How can you access it? Have any of you had experience with databases before? She also has some survey data that must be accessed using Qualtrics' API. What is an API, anyway?
 
 ## Computer Orientation
 
@@ -258,6 +258,75 @@ store_revenue |>
 store_revenue |> 
   select(-row.names) |> 
   write_rds("Data", "store_revenue.rds")
+```
+
+## APIs
+
+Databases are a type of server. Instead of querying a database, **APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with securely controlling what and how much data you can access.
+
+<center>
+![](Figures/import_api.png){width=850px}
+</center>
+
+## API Clients
+
+Just like SQL has a variety of *backends*, to use an API you should use an **API client** specific to the server. Also like SQL backends, there are a plethora of R packages that provide API clients for specific servers (e.g., {twitteR}, {Rfacebook}, {RGoogleAnalytics}, {WikipediR}, {qualtRics}). API clients differ, but they typically require at least:
+
+- Key: An API key is like a username that can change.
+- Token: An API token is like a password that can change.
+
+## Use an API
+
+Install and load the {qualtRics} package so that we can access the survey data. Remember to press Tools then Install Packages to install it before trying to load it.
+
+In the console (NOT a code chunk), call the following:
+
+```{r eval=FALSE}
+qualtRics::qualtrics_api_credentials(
+  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
+  base_url = "sjc1.qualtrics.com"
+)
+
+readRenviron("~/.Renviron")
+```
+
+## Import Data
+
+We can see what surveys are available to download.
+
+```{r eval=FALSE}
+all_surveys()
+```
+
+We can import data by using the survey ID.
+
+```{r eval=FALSE}
+survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
+
+survey_data
+```
+
+## Good Practices
+
+We've discussed a few good practices when it comes to importing data:
+
+- Disconnect from databases after importing data.
+- Don't save sensitive credentials in your code.
+- Write data locally (with permission) once it's been imported.
+
+When we import data from a server in Quarto, every time we render the document it will re-execute and eat up server bandwidth (i.e., database access or API calls). It's better to do this once and then, if we need to show how we got the data, include the code with the relevant cell set to `#| eval: false`.
+
+## Your Turn!
+
+Save the data locally as a CSV like we learned how to last time. Then set the chunk where you accessed the survey data to `#| eval: false`.
+
+## Solution 
+
+```{r eval=FALSE}
+
+survey_data |> 
+  write_csv("store_revenue.csv")
+
 ```
 
 ## Live Coding Exercise
