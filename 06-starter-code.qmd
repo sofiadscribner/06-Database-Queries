@@ -112,6 +112,47 @@ store_revenue |>
   write_rds("Data", "store_revenue.rds")
 ```
 
+### Use an API
+
+```{r}
+
+library(tidyverse)
+
+# Paste the following code to the console below and run it. You are saving our API key and the base URL of the API.
+
+qualtRics::qualtrics_api_credentials(
+  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
+  base_url = "sjc1.qualtrics.com"
+)
+
+readRenviron("~/.Renviron")
+```
+
+### Import Data
+
+```{r}
+
+# This code displays all the avaiable surveys.
+
+all_surveys()
+```
+
+```{r}
+
+# This code saves the survey of interest in our R environment.
+
+survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
+
+survey_data
+```
+
+### Your Turn
+
+```{r}
+
+# Write the survey data locally.
+```
+
 ### Live Coding Exercise
 
 ```{r}

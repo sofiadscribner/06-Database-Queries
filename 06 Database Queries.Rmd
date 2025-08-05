@@ -318,7 +318,7 @@ When we import data from a server in Quarto, every time we render the document i
 
 ## Your Turn!
 
-Save the data locally as a CSV like we learned how to last time. Then set the chunk where you accessed the survey data to `#| eval: false`.
+Save the data locally as a CSV. Then set the chunk where you accessed the survey data to `#| eval: false`.
 
 ## Solution 
 
